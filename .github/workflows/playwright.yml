@@ -1,0 +1,72 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    - name: Configure application for testing
+      run: |
+        cp inc/configuration.inc.php inc/configuration.inc.php.bak
+        sed -i "s/define('DB_USER', 'SYSDBA');/define('DB_USER', 'SYSDBA');/" inc/configuration.inc.php
+        sed -i "s/define('DB_PASS', '');/define('DB_PASS', 'test');/" inc/configuration.inc.php
+        sed -i "s/define('DB_HOST', 'localhost');/define('DB_HOST', 'firebird');/" inc/configuration.inc.php
+        sed -i "s|define('DB_PATH', '/var/lib/firebird/3.0/data/employee.fdb');|define('DB_PATH', 'test.fdb');|" inc/configuration.inc.php
+
+    - name: Start services
+      run: docker-compose up -d
+
+    - name: Wait for services to be healthy
+      run: |
+        echo "Waiting for services to become healthy..."
+        # This command will wait for the healthchecks defined in docker-compose.yml to pass.
+        # It will exit with an error if the services do not become healthy within the timeout.
+        docker-compose ps
+        max_wait=300
+        current_wait=0
+        while [ $current_wait -lt $max_wait ]; do
+          if [ "$(docker-compose ps -q web | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ] && 
+             [ "$(docker-compose ps -q firebird | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ]; then
+            echo "Services are healthy!"
+            docker-compose logs
+            exit 0
+          fi
+          echo -n "."
+          sleep 5
+          current_wait=$((current_wait + 5))
+        done
+        echo "Services did not become healthy in time."
+        docker-compose logs
+        exit 1
+
+    - name: Run Playwright tests
+      run: npx playwright test
+      env:
+        BASE_URL: http://localhost:8080
+
+    - name: Stop services
+      if: always()
+      run: docker-compose down
+
+    - name: Restore config file
+      if: always()
+      run: |
+        mv inc/configuration.inc.php.bak inc/configuration.inc.php

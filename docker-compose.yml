@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  firebird:
+    image: firebird/firebird:3.0
+    ports:
+      - "3050:3050"
+    environment:
+      FIREBIRD_PASSWORD: test
+      FIREBIRD_DB: test.fdb
+    healthcheck:
+      test: ["CMD", "gbak", "-user", "sysdba", "-password", "test", "localhost:/firebird/data/test.fdb", "/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: .github/docker/php-apache-firebird/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      firebird:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/database.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

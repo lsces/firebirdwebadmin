@@ -4,7 +4,7 @@
   "description": "FirebirdWebAdmin is a web frontend for the Firebird database server.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx playwright test"
   },
   "repository": {
     "type": "git",
@@ -34,5 +34,8 @@
   "bugs": {
     "url": "https://github.com/mariuz/firebirdwebadmin/issues"
   },
-  "homepage": "https://github.com/mariuz/firebirdwebadmin#readme"
+  "homepage": "https://github.com/mariuz/firebirdwebadmin#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
 }
