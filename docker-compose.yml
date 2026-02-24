@@ -1,6 +1,6 @@
 services:
   firebird:
-    image: firebirdsql/firebird:v3.0
+    image: firebirdsql/firebird:3
     ports:
       - "3050:3050"
     environment:
