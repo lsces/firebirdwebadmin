@@ -25,8 +25,26 @@ function selectedElement(source) {
 
 // request and display the accociated values for a foreign key from the watchtable panel
 function requestFKValues(table, column, value) {
-    var req = new XMLHttpRequestClient(php_xml_http_request_server_url);
-    req.Request("fk_values", new Array(table, column, value), "setInnerHtml", new Array());
+    const url = new URL(php_xml_http_request_server_url);
+    url.searchParams.append('f', 'fk_values');
+    const params = [table, column, value];
+    params.forEach((param, i) => {
+        url.searchParams.append(`p${i}`, param);
+    });
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(html => {
+            displayFKValues(html);
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
 }
 
 function displayFKValues(html) {
@@ -35,20 +53,97 @@ function displayFKValues(html) {
 }
 
 function detailPrefix(type) {
+
     switch (type) {
+
     case 'table':
+
         return 't';
+
         break;
+
     case 'view':
+
         return 'v';
+
         break;
+
     case 'trigger':
+
         return 'r';
+
         break;
+
     case 'procedure':
+
         return 'p';
+
         break;
+
     default:
+
         return '';
+
     }
+
+}
+
+
+
+// A modern fetch-based replacement for the old XMLHttpRequestClient.Request
+
+function doRequest(handler, handler_parameters, callback, callback_parameters) {
+
+    const url = new URL(php_xml_http_request_server_url);
+
+    url.searchParams.append('f', handler);
+
+    handler_parameters.forEach((param, i) => {
+
+        url.searchParams.append(`p${i}`, param);
+
+    });
+
+
+
+    fetch(url)
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(`Network response was not ok for handler: ${handler}`);
+
+            }
+
+            return response.text();
+
+        })
+
+        .then(textResponse => {
+
+            // Get the callback function from the window object
+
+            const callbackFn = window[callback];
+
+            if (typeof callbackFn === 'function') {
+
+                // Call the function with the response and any extra parameters
+
+                callbackFn(textResponse, ...callback_parameters);
+
+            } else {
+
+                console.error(`Callback function "${callback}" not found.`);
+
+            }
+
+        })
+
+        .catch(error => {
+
+            console.error('There has been a problem with your fetch operation:', error);
+
+        });
+
 }
