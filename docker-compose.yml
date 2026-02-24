@@ -1,12 +1,11 @@
-version: '3.8'
 services:
   firebird:
-    image: firebird/firebird:3.0
+    image: firebirdsql/firebird:3.0
     ports:
       - "3050:3050"
     environment:
       FIREBIRD_PASSWORD: test
-      FIREBIRD_DB: test.fdb
+      FIREBIRD_DATABASE: test.fdb
     healthcheck:
       test: ["CMD", "gbak", "-user", "sysdba", "-password", "test", "localhost:/firebird/data/test.fdb", "/dev/null"]
       interval: 10s

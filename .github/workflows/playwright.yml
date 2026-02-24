@@ -26,10 +26,9 @@ jobs:
     - name: Configure application for testing
       run: |
         cp inc/configuration.inc.php inc/configuration.inc.php.bak
-        sed -i "s/define('DB_USER', 'SYSDBA');/define('DB_USER', 'SYSDBA');/" inc/configuration.inc.php
-        sed -i "s/define('DB_PASS', '');/define('DB_PASS', 'test');/" inc/configuration.inc.php
-        sed -i "s/define('DB_HOST', 'localhost');/define('DB_HOST', 'firebird');/" inc/configuration.inc.php
-        sed -i "s|define('DB_PATH', '/var/lib/firebird/3.0/data/employee.fdb');|define('DB_PATH', 'test.fdb');|" inc/configuration.inc.php
+        sed -i "s/define('DEFAULT_HOST',    'localhost');/define('DEFAULT_HOST',    'firebird');/" inc/configuration.inc.php
+        sed -i "s/define('DEFAULT_DB',      'employee.fdb');/define('DEFAULT_DB',      'test.fdb');/" inc/configuration.inc.php
+        sed -i "s|define('DEFAULT_PATH',    '/var/lib/firebird/2.5/data/');|define('DEFAULT_PATH',    '/firebird/data/');|" inc/configuration.inc.php
 
     - name: Start services
       run: docker compose up -d
@@ -43,8 +42,8 @@ jobs:
         max_wait=300
         current_wait=0
         while [ $current_wait -lt $max_wait ]; do
-          if [ "$(docker-compose ps -q web | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ] && 
-             [ "$(docker-compose ps -q firebird | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ]; then
+          if [ "$(docker compose ps -q web | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ] && 
+             [ "$(docker compose ps -q firebird | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ]; then
             echo "Services are healthy!"
             docker compose logs
             exit 0
