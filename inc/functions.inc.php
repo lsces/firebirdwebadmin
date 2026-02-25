@@ -1093,7 +1093,7 @@ function fix_language()
 //
 // handler for php errors, $php_error is displayed on the info-panel
 //
-function error_handler($errno, $errmsg, $file, $line, $errstack)
+function error_handler($errno, $errmsg, $file, $line, $errstack = null)
 {
     global $php_error, $warning;
 
