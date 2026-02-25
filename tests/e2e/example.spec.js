@@ -11,7 +11,7 @@ test('login form is visible', async ({ page }) => {
     await page.goto('/');
 
     // Expect the login form to be visible
-    await expect(page.locator('form[action="database.php"]')).toBeVisible();
+    await expect(page.locator('form[name="db_login_form"]')).toBeVisible();
     await expect(page.getByLabel('Username')).toBeVisible();
     await expect(page.getByLabel('Password')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
