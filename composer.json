@@ -7,10 +7,5 @@
         "phpunit/phpunit": "^10.5"
     },
     "autoload": {
-        "files": [
-            "inc/configuration.inc.php",
-            "inc/functions.inc.php",
-            "inc/firebird.inc.php"
-        ]
     }
 }
