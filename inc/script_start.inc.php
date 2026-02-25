@@ -7,7 +7,9 @@
 
 require './inc/configuration.inc.php';
 
-if (DEBUG) {
+ini_set('log_errors', 'On');
+if (defined('DEBUG') && DEBUG) {
+    ini_set('display_errors', 'On');
     $start_time = @microtime();
 }
 

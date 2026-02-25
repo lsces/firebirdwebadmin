@@ -1105,6 +1105,9 @@ function error_handler($errno, $errmsg, $file, $line, $errstack)
         return;
     }
 
+    $log_msg = "PHP Error [$errno]: $errmsg in $file on line $line";
+    error_log($log_msg);
+
     if (E_ERROR & $errno) {
         $php_error .= "$errmsg<br>\n"
             . "in file: $file, line $line<br>\n";
