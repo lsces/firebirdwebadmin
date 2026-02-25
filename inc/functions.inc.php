@@ -681,7 +681,7 @@ function is_allowed_db($filename)
 
     $cmp_func = (stristr(php_uname(), 'wind') !== false) ? 'strcasecmp' : 'strcmp';
 
-    if (isset($ALLOWED_FILES) && count($ALLOWED_FILES) > 0) {
+    if (isset($ALLOWED_FILES) && is_array($ALLOWED_FILES) && count($ALLOWED_FILES) > 0) {
         foreach ($ALLOWED_FILES as $file) {
             if ($cmp_func($filename, $file) == 0) {
 
@@ -692,7 +692,7 @@ function is_allowed_db($filename)
     }
 
     $dirname = dirname($filename);
-    if (isset($ALLOWED_DIRS) && count($ALLOWED_DIRS) > 0) {
+    if (isset($ALLOWED_DIRS) && is_array($ALLOWED_DIRS) && count($ALLOWED_DIRS) > 0) {
         foreach ($ALLOWED_DIRS as $dir) {
             if ($cmp_func($dirname, substr($dir, 0, -1)) == 0) {
 
@@ -971,13 +971,14 @@ function get_tabmenu($page)
     $html = "<ul class=\"nav nav-pills nav-justified\">\n";
 
     foreach ($menuentries as $item => $script) {
-        if (count($_SESSION['s_' . strtolower($item) . '_panels']) == 1) {
+        $p_count = (isset($_SESSION['s_' . strtolower($item) . '_panels']) && is_array($_SESSION['s_' . strtolower($item) . '_panels'])) ? count($_SESSION['s_' . strtolower($item) . '_panels']) : 0;
+        if ($p_count == 1) {
             continue;
         }
         $class = $page == $item ? 'active' : '';
 
         $html .= '    <li class="' . $class . "\">\n"
-            . '      <a class="menu-link" href="' . $script . '">' . $GLOBALS['menu_strings'][$item] . "</a>\n"
+            . '      <a class="menu-link" href="' . $script . '">' . (isset($GLOBALS['menu_strings'][$item]) ? $GLOBALS['menu_strings'][$item] : $item) . "</a>\n"
             . "    </li>\n";
     }
 
@@ -1003,13 +1004,14 @@ function get_tabmenu_top_fixed($page)
     $html = "<ul class=\"nav navbar-nav\">\n";
 
     foreach ($menuentries as $item => $script) {
-        if (count($_SESSION['s_' . strtolower($item) . '_panels']) == 1) {
+        $p_count = (isset($_SESSION['s_' . strtolower($item) . '_panels']) && is_array($_SESSION['s_' . strtolower($item) . '_panels'])) ? count($_SESSION['s_' . strtolower($item) . '_panels']) : 0;
+        if ($p_count == 1) {
             continue;
         }
         $class = ($page == $item) ? ' class="active"' : '';
 
         $html .= '<li' . $class . '>'
-                   . '      <a class="menu-link" href="' . $script . '">' . $GLOBALS['menu_strings'][$item] . "</a>\n"
+                   . '      <a class="menu-link" href="' . $script . '">' . (isset($GLOBALS['menu_strings'][$item]) ? $GLOBALS['menu_strings'][$item] : $item) . "</a>\n"
             . "    </li>\n";
     }
 
