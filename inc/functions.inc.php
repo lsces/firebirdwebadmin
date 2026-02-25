@@ -40,7 +40,7 @@ function build_title($str, $showdb = true)
 {
     global $s_connected, $s_login;
 
-    $title = 'FirebirdWebAdmin ' . VERSION . ' *** ' . $str;
+    $title = 'Firebird Web Admin / ' . $str;
     if ($s_connected == true && $showdb) {
         $title .= ': ' . $s_login['database'];
     }

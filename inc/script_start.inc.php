@@ -26,7 +26,7 @@ if (DEBUG || DEBUG_HTML) {
     include './inc/debug_funcs.inc.php';
 }
 
-if (!extension_loaded('interbase')) {
+if (!extension_loaded('interbase') && !extension_loaded('firebird')) {
     die($ERRORS['NO_IBASE_MODULE']);
 }
 
