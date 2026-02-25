@@ -31,7 +31,13 @@ jobs:
         sed -i "s|define('DEFAULT_PATH',    '/var/lib/firebird/2.5/data/');|define('DEFAULT_PATH',    '/firebird/data/');|" inc/configuration.inc.php
 
     - name: Start services
-      run: docker compose up -d
+      run: |
+        docker compose up -d || {
+          echo "Docker compose up failed!"
+          docker compose ps
+          docker compose logs
+          exit 1
+        }
 
     - name: Wait for services to be healthy
       run: |
