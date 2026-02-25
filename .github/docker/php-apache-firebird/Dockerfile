@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     && make \
     && make install \
     && docker-php-ext-install pdo_firebird \
-    && docker-php-ext-enable firebird \
+    && docker-php-ext-enable interbase \
     && a2enmod rewrite \
     && rm -rf /tmp/php-firebird \
     && apt-get purge -y --auto-remove git autoconf build-essential \
