@@ -4,13 +4,13 @@ services:
     ports:
       - "3050:3050"
     environment:
-      FIREBIRD_PASSWORD: test
+      FIREBIRD_ROOT_PASSWORD: test
       FIREBIRD_DATABASE: test.fdb
     healthcheck:
-      test: ["CMD", "gbak", "-user", "sysdba", "-password", "test", "localhost:/firebird/data/test.fdb", "/dev/null"]
+      test: ["CMD", "/opt/firebird/bin/isql", "-user", "sysdba", "-password", "test", "localhost:/firebird/data/test.fdb", "-q", "-e", "show database; quit;"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   web:
     build:
