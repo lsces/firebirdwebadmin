@@ -48,17 +48,22 @@ jobs:
         max_wait=300
         current_wait=0
         while [ $current_wait -lt $max_wait ]; do
-          if [ "$(docker compose ps -q web | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ] && 
-             [ "$(docker compose ps -q firebird | xargs docker inspect -f '{{.State.Health.Status}}')" = "healthy" ]; then
+          web_status=$(docker compose ps --format json web | jq -r '.[0].Health' 2>/dev/null || docker inspect -f '{{.State.Health.Status}}' $(docker compose ps -q web))
+          firebird_status=$(docker compose ps --format json firebird | jq -r '.[0].Health' 2>/dev/null || docker inspect -f '{{.State.Health.Status}}' $(docker compose ps -q firebird))
+          
+          if [ "$web_status" = "healthy" ] && [ "$firebird_status" = "healthy" ]; then
             echo "Services are healthy!"
-            docker compose logs
             exit 0
           fi
-          echo -n "."
-          sleep 5
-          current_wait=$((current_wait + 5))
+          echo "Waiting... Web: $web_status, Firebird: $firebird_status"
+          sleep 10
+          current_wait=$((current_wait + 10))
         done
         echo "Services did not become healthy in time."
+        echo "--- Firebird Healthcheck Logs ---"
+        docker inspect --format='{{json .State.Health}}' $(docker compose ps -q firebird)
+        echo "--- Web Healthcheck Logs ---"
+        docker inspect --format='{{json .State.Health}}' $(docker compose ps -q web)
         docker compose logs
         exit 1
 
