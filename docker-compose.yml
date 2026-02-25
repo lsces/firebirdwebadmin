@@ -7,11 +7,11 @@ services:
       FIREBIRD_ROOT_PASSWORD: test
       FIREBIRD_DATABASE: test.fdb
     healthcheck:
-      test: ["CMD-SHELL", "/opt/firebird/bin/isql -user sysdba -password test 127.0.0.1:/var/lib/firebird/data/test.fdb -q -e 'quit;'"]
+      test: ["CMD-SHELL", "timeout 1s bash -c ':> /dev/tcp/127.0.0.1/3050' || exit 1"]
       interval: 10s
-      timeout: 10s
+      timeout: 5s
       retries: 30
-      start_period: 60s
+      start_period: 30s
 
   web:
     build:
@@ -22,8 +22,7 @@ services:
     volumes:
       - .:/var/www/html
     depends_on:
-      firebird:
-        condition: service_healthy
+      - firebird
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/database.php"]
       interval: 10s
