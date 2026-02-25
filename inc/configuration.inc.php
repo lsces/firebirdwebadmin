@@ -131,6 +131,21 @@ define('DEFAULT_ROWS', 25);        // number of rows to dispay in the watch-pane
 define('BLOB_WINDOW_WIDTH', 600);  // default dimensions for the blob displaying windows
 define('BLOB_WINDOW_HEIGHT', 800);
 
+// Color constants for customization
+define('COLOR_BACKGROUND',      '#FFFFFF');
+define('COLOR_PANEL',           '#EEEEEE');
+define('COLOR_AREA',            '#DDDDDD');
+define('COLOR_HEADLINE',        '#CCCCCC');
+define('COLOR_MENUBORDER',      '#BBBBBB');
+define('COLOR_IFRAMEBORDER',    '#AAAAAA');
+define('COLOR_IFRAMEBACKGROUND','#999999');
+define('COLOR_LINK',            '#0000FF');
+define('COLOR_LINKHOVER',       '#0000AA');
+define('COLOR_SELECTEDROW',     '#FFFF00');
+define('COLOR_SELECTEDINPUT',   '#00FF00');
+define('COLOR_FIRSTROW',        '#F0F0F0');
+define('COLOR_SECONDROW',       '#E0E0E0');
+
 define('SESSION_NAME', 'firebirdwebadmin');         // session name to use
 
 # transaction parameters used for the calls of fbird_trans()
