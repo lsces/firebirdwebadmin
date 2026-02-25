@@ -28,7 +28,7 @@ jobs:
         cp inc/configuration.inc.php inc/configuration.inc.php.bak
         sed -i "s/define('DEFAULT_HOST',    'localhost');/define('DEFAULT_HOST',    'firebird');/" inc/configuration.inc.php
         sed -i "s/define('DEFAULT_DB',      'employee.fdb');/define('DEFAULT_DB',      'test.fdb');/" inc/configuration.inc.php
-        sed -i "s|define('DEFAULT_PATH',    '/var/lib/firebird/2.5/data/');|define('DEFAULT_PATH',    '/firebird/data/');|" inc/configuration.inc.php
+        sed -i "s|define('DEFAULT_PATH',    '/var/lib/firebird/2.5/data/');|define('DEFAULT_PATH',    '/var/lib/firebird/data/');|" inc/configuration.inc.php
 
     - name: Start services
       run: |

@@ -7,7 +7,7 @@ services:
       FIREBIRD_ROOT_PASSWORD: test
       FIREBIRD_DATABASE: test.fdb
     healthcheck:
-      test: ["CMD-SHELL", "/opt/firebird/bin/isql -user sysdba -password test localhost:test.fdb -q -e 'quit;'"]
+      test: ["CMD-SHELL", "isql -user sysdba -password test localhost:/var/lib/firebird/data/test.fdb -q -e 'quit;'"]
       interval: 10s
       timeout: 10s
       retries: 30
