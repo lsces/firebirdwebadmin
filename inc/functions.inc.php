@@ -1249,6 +1249,7 @@ function get_customize_cookie_name()
 //
 function get_customize_defaults($useragent)
 {
+    $ie = (isset($useragent) && is_array($useragent) && isset($useragent['ie'])) ? $useragent['ie'] : false;
 
     return array('color' => array('background' => COLOR_BACKGROUND,
         'panel' => COLOR_PANEL,
@@ -1264,7 +1265,7 @@ function get_customize_defaults($useragent)
         'firstrow' => COLOR_FIRSTROW,
         'secondrow' => COLOR_SECONDROW),
         'language' => LANGUAGE,
-        'fontsize' => ($useragent['ie'] ? 8 : 11),
+        'fontsize' => ($ie ? 8 : 11),
         'textarea' => array('cols' => SQL_AREA_COLS,
             'rows' => SQL_AREA_ROWS),
         'iframeheight' => IFRAME_HEIGHT,

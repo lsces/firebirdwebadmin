@@ -14,7 +14,7 @@
             <a class="navbar-brand" href="#">FirebirdWebAdmin</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <?= get_tabmenu_top_fixed($s_page) ?>
+            <?php echo get_tabmenu_top_fixed($s_page); ?>
 			
 			<?php if ($s_connected == true) {
     ?>
@@ -45,8 +45,7 @@
     ?></a></li>
 					
 					<li role="separator" class="divider"></li>
-					<li><a href="logout.php"><?= $button_strings['Logout'];
-    ?></a></li>
+					<li><a href="logout.php"><?php echo $button_strings['Logout']; ?></a></li>
 				  </ul>
 				</li>
 			</ul>
