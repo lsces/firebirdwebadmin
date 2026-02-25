@@ -163,7 +163,7 @@ define('DEBUG_FILES', true);           // if TRUE the temporary files created in
                                         // are not deleted when isql is finished
 
 
-if ('' != SESSION_NAME) {
+if ('' != SESSION_NAME && PHP_SAPI !== 'cli') {
     session_name(SESSION_NAME);
 }
 

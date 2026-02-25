@@ -13,3 +13,7 @@
 # Node dependencies
 
 node_modules/
+
+# PHP dependencies
+vendor/
+composer.lock

@@ -70,6 +70,18 @@ While there is no exhaustive manual, users familiar with Firebird will find the 
 * **Ubuntu Guide:** [How to install Firebird on Ubuntu](https://help.ubuntu.com/community/Firebird3.0)
 * **Firebird Official Docs:** [Firebird Documentation](https://www.firebirdsql.org/en/documentation/)
 
+## 🧪 Testing
+
+### Unit Tests (PHPUnit)
+The project uses PHPUnit for unit testing core functions.
+1. Install dependencies: `composer install`
+2. Run tests: `./vendor/bin/phpunit`
+
+### End-to-End Tests (Playwright)
+The project uses Playwright for E2E testing.
+1. Install dependencies: `npm install`
+2. Run tests: `npx playwright test`
+
 ---
 
 ## 📄 ChangeLog
