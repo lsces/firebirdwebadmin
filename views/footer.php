@@ -121,7 +121,6 @@
 
 <script src="./js/miscellaneous.js" type="text/javascript"></script>
 <?php echo js_global_variables()
-. js_xml_http_request_client()
 . js_request_close_panel()
 . $js_stack;
 ?>
