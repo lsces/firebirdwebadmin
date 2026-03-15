@@ -78,7 +78,7 @@ function initialize_session()
               's_referer' => '',                          // replacement for $_SERVER['HTTP_REFERER']
               's_page' => '',                          // indicator for the active page
 
-              's_cust' => get_customize_defaults($useragent), // user specific customization values
+              's_cust' => get_customize_defaults(null), // user specific customization values
 
               's_login' => array('database' => DEFAULT_PATH.DEFAULT_DB,    // set by the db_login panel
                                  'user' => DEFAULT_USER,

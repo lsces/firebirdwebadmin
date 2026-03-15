@@ -1,0 +1,83 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    - name: Configure application for testing
+      run: |
+        cp inc/configuration.inc.php inc/configuration.inc.php.bak
+        sed -i "s/define('DEFAULT_HOST',    'localhost');/define('DEFAULT_HOST',    'firebird');/" inc/configuration.inc.php
+        sed -i "s/define('DEFAULT_DB',      'employee.fdb');/define('DEFAULT_DB',      'test.fdb');/" inc/configuration.inc.php
+        sed -i "s|define('DEFAULT_PATH',    '/var/lib/firebird/2.5/data/');|define('DEFAULT_PATH',    '/var/lib/firebird/data/');|" inc/configuration.inc.php
+
+    - name: Start services
+      run: |
+        docker compose up -d || {
+          echo "Docker compose up failed!"
+          docker compose ps
+          docker compose logs
+          exit 1
+        }
+
+    - name: Wait for services to be healthy
+      run: |
+        echo "Waiting for services to become healthy..."
+        max_wait=300
+        current_wait=0
+        while [ $current_wait -lt $max_wait ]; do
+          firebird_status=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose ps -q firebird) 2>/dev/null || echo "starting")
+          web_status=$(docker inspect --format='{{.State.Health.Status}}' $(docker compose ps -q web) 2>/dev/null || echo "starting")
+          
+          echo "Status: Firebird=$firebird_status, Web=$web_status (${current_wait}s)"
+          
+          if [ "$firebird_status" = "healthy" ] && [ "$web_status" = "healthy" ]; then
+            echo "All services are healthy!"
+            exit 0
+          fi
+          
+          sleep 10
+          current_wait=$((current_wait + 10))
+        done
+        
+        echo "ERROR: Services did not become healthy in time."
+        echo "--- Firebird Detailed Status ---"
+        docker inspect $(docker compose ps -q firebird)
+        echo "--- Web Detailed Status ---"
+        docker inspect $(docker compose ps -q web)
+        echo "--- Container Logs ---"
+        docker compose logs
+        exit 1
+
+    - name: Run Playwright tests
+      run: npx playwright test
+      env:
+        BASE_URL: http://localhost:8080
+
+    - name: Stop services
+      if: always()
+      run: docker compose down
+
+    - name: Restore config file
+      if: always()
+      run: |
+        mv inc/configuration.inc.php.bak inc/configuration.inc.php

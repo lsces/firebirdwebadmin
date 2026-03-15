@@ -153,21 +153,6 @@ EOT;
 }
 
 //
-// include the XMLHttpRequestClient library
-//
-function js_xml_http_request_client()
-{
-    static $done = false;
-
-    if ($done == true) {
-        return '';
-    }
-    $done = true;
-
-    return js_javascript_file('js/XMLHttpRequestClient.js');
-}
-
-//
 // return the URL of the server-script for the XMLHttpRequests
 //
 function xml_http_request_server_url()
@@ -195,8 +180,7 @@ function js_request_column_config_form()
     $js = <<<EOT
     <script language="javascript"  type="text/javascript">
     function requestColumnConfigForm(fk_table, table, column, divId) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("column_config_form", new Array(fk_table, table, column), "setInnerHtml", new Array(divId));
+        doRequest("column_config_form", [fk_table, table, column], "setInnerHtml", [divId]);
     }
     </script>
 
@@ -215,8 +199,7 @@ function js_request_close_panel()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function requestClosedPanel(idx, active) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("closed_panel", new Array(idx, active), "setInnerHtml", new Array("p" + idx));
+        doRequest("closed_panel", [idx, active], "setInnerHtml", ["p" + idx]);
     }
     </script>
 
@@ -241,12 +224,10 @@ function js_request_details()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function requestDetail(type, name, title) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("detail_view", new Array(type, name, title), "setInnerHtml", new Array(detailPrefix(type) + '_' + name));
+        doRequest("detail_view", [type, name, title], "setInnerHtml", [detailPrefix(type) + '_' + name]);
     }
     function closeDetail(type, id, name, title) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("detail_close", new Array(type, name, title), "setInnerHtml", new Array(id));
+        doRequest("detail_close", [type, name, title], "setInnerHtml", [id]);
     }
     </script>
 
@@ -267,8 +248,7 @@ function js_request_fk()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function requestFKValues(table, column, value) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("fk_values", new Array(table, column, value), "setInnerHtml", new Array("fk"));
+        doRequest("fk_values", [table, column, value], "setInnerHtml", ["fk"]);
     }
     </script>
 
@@ -287,12 +267,10 @@ function js_request_filter_fields()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function getFilterFields(table) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("systable_filter_fields", new Array(table), "setInnerHtml", new Array("systable_field"));
+        doRequest("systable_filter_fields", [table], "setInnerHtml", ["systable_field"]);
     }
     function getFilterValues(table, field) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("systable_filter_values", new Array(table, field), "setInnerHtml", new Array("systable_value"));
+        doRequest("systable_filter_values", [table, field], "setInnerHtml", ["systable_value"]);
     }
     </script>
 
@@ -311,8 +289,7 @@ function js_request_table_columns()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function requestTableColumns(table, id, restriction) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("table_columns_selectlist", new Array(table, id, restriction), "setInnerHtml", new Array(id));
+        doRequest("table_columns_selectlist", [table, id, restriction], "setInnerHtml", [id]);
     }
     </script>
 
@@ -332,8 +309,7 @@ function js_request_sql_buffer()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function requestSqlBuffer(idx) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("sql_buffer", new Array(idx), "putSqlBuffer", new Array(idx));
+        doRequest("sql_buffer", [idx], "putSqlBuffer", [idx]);
     }
 
     function putSqlBuffer(sql, idx) {
@@ -356,8 +332,7 @@ function js_data_export()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function replaceExportFormatOptions(format) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("data_export_format_options", new Array(format), "setInnerHtml", new Array("dt_export_format_options"));
+        doRequest("data_export_format_options", [format], "setInnerHtml", ["dt_export_format_options"]);
 
         hide("dt_export_iframe");
 
@@ -371,13 +346,11 @@ function js_data_export()
     }
 
     function setExportTarget(target) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("set_export_target", new Array(target), "", new Array());
+        doRequest("set_export_target", [target], "", []);
     }
 
     function setExportSource(source) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("set_export_source", new Array(source), "", new Array());
+        doRequest("set_export_source", [source], "", []);
 
         hide("dt_export_iframe");
 
@@ -414,8 +387,7 @@ function js_request_comment_area()
     $js = <<<EOT
     <script language="javascript" type="text/javascript">
     function requestCommentArea(type, name) {
-        var req = new XMLHttpRequestClient("$server_url");
-        req.Request("comment_area", new Array(type, name), "setInnerHtml", new Array(detailPrefix(type) + 'c_' + name));
+        doRequest("comment_area", [type, name], "setInnerHtml", [detailPrefix(type) + 'c_' + name]);
     }
     </script>
 

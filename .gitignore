@@ -5,4 +5,15 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 # PhpStorm
+
 .idea/**/*
+
+
+
+# Node dependencies
+
+node_modules/
+
+# PHP dependencies
+vendor/
+composer.lock

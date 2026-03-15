@@ -40,7 +40,7 @@ function build_title($str, $showdb = true)
 {
     global $s_connected, $s_login;
 
-    $title = 'FirebirdWebAdmin ' . VERSION . ' *** ' . $str;
+    $title = 'Firebird Web Admin / ' . $str;
     if ($s_connected == true && $showdb) {
         $title .= ': ' . $s_login['database'];
     }
@@ -681,7 +681,7 @@ function is_allowed_db($filename)
 
     $cmp_func = (stristr(php_uname(), 'wind') !== false) ? 'strcasecmp' : 'strcmp';
 
-    if (isset($ALLOWED_FILES) && count($ALLOWED_FILES) > 0) {
+    if (isset($ALLOWED_FILES) && is_array($ALLOWED_FILES) && count($ALLOWED_FILES) > 0) {
         foreach ($ALLOWED_FILES as $file) {
             if ($cmp_func($filename, $file) == 0) {
 
@@ -692,7 +692,7 @@ function is_allowed_db($filename)
     }
 
     $dirname = dirname($filename);
-    if (isset($ALLOWED_DIRS) && count($ALLOWED_DIRS) > 0) {
+    if (isset($ALLOWED_DIRS) && is_array($ALLOWED_DIRS) && count($ALLOWED_DIRS) > 0) {
         foreach ($ALLOWED_DIRS as $dir) {
             if ($cmp_func($dirname, substr($dir, 0, -1)) == 0) {
 
@@ -971,13 +971,14 @@ function get_tabmenu($page)
     $html = "<ul class=\"nav nav-pills nav-justified\">\n";
 
     foreach ($menuentries as $item => $script) {
-        if (count($_SESSION['s_' . strtolower($item) . '_panels']) == 1) {
+        $p_count = (isset($_SESSION['s_' . strtolower($item) . '_panels']) && is_array($_SESSION['s_' . strtolower($item) . '_panels'])) ? count($_SESSION['s_' . strtolower($item) . '_panels']) : 0;
+        if ($p_count == 1) {
             continue;
         }
         $class = $page == $item ? 'active' : '';
 
         $html .= '    <li class="' . $class . "\">\n"
-            . '      <a class="menu-link" href="' . $script . '">' . $GLOBALS['menu_strings'][$item] . "</a>\n"
+            . '      <a class="menu-link" href="' . $script . '">' . (isset($GLOBALS['menu_strings'][$item]) ? $GLOBALS['menu_strings'][$item] : $item) . "</a>\n"
             . "    </li>\n";
     }
 
@@ -1003,13 +1004,14 @@ function get_tabmenu_top_fixed($page)
     $html = "<ul class=\"nav navbar-nav\">\n";
 
     foreach ($menuentries as $item => $script) {
-        if (count($_SESSION['s_' . strtolower($item) . '_panels']) == 1) {
+        $p_count = (isset($_SESSION['s_' . strtolower($item) . '_panels']) && is_array($_SESSION['s_' . strtolower($item) . '_panels'])) ? count($_SESSION['s_' . strtolower($item) . '_panels']) : 0;
+        if ($p_count == 1) {
             continue;
         }
         $class = ($page == $item) ? ' class="active"' : '';
 
         $html .= '<li' . $class . '>'
-                   . '      <a class="menu-link" href="' . $script . '">' . $GLOBALS['menu_strings'][$item] . "</a>\n"
+                   . '      <a class="menu-link" href="' . $script . '">' . (isset($GLOBALS['menu_strings'][$item]) ? $GLOBALS['menu_strings'][$item] : $item) . "</a>\n"
             . "    </li>\n";
     }
 
@@ -1091,7 +1093,7 @@ function fix_language()
 //
 // handler for php errors, $php_error is displayed on the info-panel
 //
-function error_handler($errno, $errmsg, $file, $line, $errstack)
+function error_handler($errno, $errmsg, $file, $line, $errstack = null)
 {
     global $php_error, $warning;
 
@@ -1102,6 +1104,9 @@ function error_handler($errno, $errmsg, $file, $line, $errstack)
     if (!(error_reporting() & $errno)) {
         return;
     }
+
+    $log_msg = "PHP Error [$errno]: $errmsg in $file on line $line";
+    error_log($log_msg);
 
     if (E_ERROR & $errno) {
         $php_error .= "$errmsg<br>\n"
@@ -1249,6 +1254,7 @@ function get_customize_cookie_name()
 //
 function get_customize_defaults($useragent)
 {
+    $ie = (isset($useragent) && is_array($useragent) && isset($useragent['ie'])) ? $useragent['ie'] : false;
 
     return array('color' => array('background' => COLOR_BACKGROUND,
         'panel' => COLOR_PANEL,
@@ -1264,7 +1270,7 @@ function get_customize_defaults($useragent)
         'firstrow' => COLOR_FIRSTROW,
         'secondrow' => COLOR_SECONDROW),
         'language' => LANGUAGE,
-        'fontsize' => ($useragent['ie'] ? 8 : 11),
+        'fontsize' => ($ie ? 8 : 11),
         'textarea' => array('cols' => SQL_AREA_COLS,
             'rows' => SQL_AREA_ROWS),
         'iframeheight' => IFRAME_HEIGHT,
@@ -1328,10 +1334,7 @@ function get_request_data($name, $source = 'POST')
         if ($source == 'GET') {
             $data = urldecode($data);
         }
-        if (get_magic_quotes_gpc() ||
-            ini_get('magic_quotes_sybase') == 1
-        ) {
-
+        if (ini_get('magic_quotes_sybase') == 1) {
             $data = stripslashes($data);
         }
 

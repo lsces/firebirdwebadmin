@@ -1,0 +1,31 @@
+services:
+  firebird:
+    image: firebirdsql/firebird:3
+    ports:
+      - "3050:3050"
+    environment:
+      FIREBIRD_ROOT_PASSWORD: test
+      FIREBIRD_DATABASE: test.fdb
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1s bash -c ':> /dev/tcp/127.0.0.1/3050' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  web:
+    build:
+      context: .
+      dockerfile: .github/docker/php-apache-firebird/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - firebird
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/database.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

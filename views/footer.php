@@ -10,7 +10,7 @@
             <tr>
                 <td>
                     <p class="text-muted">
-                        <?= date('Y') ?>
+                        <?php echo date('Y'); ?>
                         -
                         <a href="https://github.com/mariuz/firebirdwebadmin">FirebirdWebAdmin</a>
                         <?php echo VERSION; ?>
@@ -120,10 +120,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.0/mode/sql/sql.min.js"></script>
 
 <script src="./js/miscellaneous.js" type="text/javascript"></script>
-<?= js_global_variables()
-. js_xml_http_request_client()
+<?php echo js_global_variables()
 . js_request_close_panel()
-. $js_stack
+. $js_stack;
 ?>
 </body>
 </html>

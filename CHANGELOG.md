@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Version 3.4.2 (24.02.2026)
+
+* [enhancement:] Refactored all AJAX calls to use the modern `fetch` API.
+* [enhancement:] Removed the outdated and insecure `XMLHttpRequestClient.js` library.
+
 ## Version 3.4.1 (27.02.2020)
 
 * [enhancement:] Adjust "Accessories" page UI.

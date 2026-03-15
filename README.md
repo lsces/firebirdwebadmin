@@ -1,85 +1,110 @@
-# FirebirdWebAdmin is a web frontend for the Firebird database server
+# FirebirdWebAdmin
+
+**FirebirdWebAdmin** is a lightweight, powerful web-based administration tool for the Firebird database server. It provides an intuitive interface for managing databases, tables, and other database objects directly from your browser.
 
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/firebirdwebadmin/localized.svg)](https://crowdin.com/project/firebirdwebadmin)
 [![Code Climate](https://codeclimate.com/github/mariuz/firebirdwebadmin/badges/gpa.svg)](https://codeclimate.com/github/mariuz/firebirdwebadmin)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://opensource.org/licenses/GPL-2.0)
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D%205.5-8892bf.svg)](https://php.net)
 
-By now it has the functionalities for
-  
-* creating, deleting, modifying databases, tables, generators, views, triggers, domains, indices, stored procedures, udf's,     exceptions, roles and database users
-* performing sql expressions on databases and display the results
-* import and export of data through files in the csv format
-* browsing through the contents of tables and views, watching them growing while typing in data
-* selecting data for deleting and editing while browsing tables
-* inserting, deleting, displaying the contents of blob fields
-* diplaying database metadata, browsing the firebird system tables
-* database backup and restore, database maintenance
+---
 
-Some of the features are only available if the database- and the web-server are running on the same machine. The reason is that php   have to call the Firebird tools (isql, gsec, gstat, etc.) to perform certain actions.
+## 🚀 Features
 
-## Overview
+### 🛠 Database & Object Management
+* **Database Operations:** Create, delete, and modify databases.
+* **Schema Management:** Manage tables, views, triggers, domains, indices, and generators.
+* **Business Logic:** Create and edit stored procedures and User Defined Functions (UDFs).
+* **Security:** Manage database users and roles.
+* **Exceptions:** Define and manage database exceptions.
 
-1. [Documentation](#documentation)
-2. [Requirements](#requirements)
-3. [ChangeLog](#requirements)
-4. [Contributing](#contributing)
-5. [Copyright notice](#copyright-notice)
+### 🔍 Data Manipulation
+* **SQL Console:** Execute SQL expressions and scripts with result display.
+* **Data Browsing:** Browse table and view contents with real-time updates.
+* **Editing:** Insert, edit, and delete data rows while browsing.
+* **Blob Support:** Handle BLOB fields (display and edit contents).
+* **Import/Export:** Seamlessly import and export data using CSV format.
 
-## Documentation
+### 📈 Administration & Maintenance
+* **Maintenance:** Database backup and restore capabilities.
+* **Monitoring:** Display database metadata and browse system tables.
+* **Statistics:** Access database and server statistics (requires local access).
+* **Maintenance Tools:** Integrated database maintenance functions.
 
-There is no documentation available yet, but if you are familiar with Firebird  you will have no troubles using FirebirdWebAdmin.
+> **Note:** Some administrative features (like backup/restore and statistics) require PHP to have access to Firebird command-line tools (`isql`, `gsec`, `gstat`, etc.) and may require the web server to run on the same machine as the database server.
 
-For some basic configuration settings have a look to the file `./inc/configuration.inc.php` before you start the programm.
+---
 
-Here is how to use and install on Ubuntu <https://help.ubuntu.com/community/Firebird3.0>
+## 📋 Requirements
 
-Firebird documentation is located on this page <https://www.firebirdsql.org/en/documentation/>
+* **PHP:** Version 5.5 or higher (PHP 7.x and 8.x recommended).
+  * Must be compiled with `pdo_firebird` or `interbase` support.
+  * `pcre` support enabled.
+* **Database:** Firebird 2.x, 3.x, or 4.x.
+* **Web Server:** Apache 2.x, Nginx, or any server with PHP support.
+* **Operating System:** Linux (tested), Windows (compatible).
 
-## Requirements
+---
 
-This is the environment I'm using for the development. Other components are not or less tested. So if you got problems make sure you are not using older software components.
+## ⚙️ Installation & Configuration
 
-PHP with compiled in support for Firebird/InterBase and pcre (but any version >= 5.5 should work)
+1. **Download:** Clone this repository or download the source code.
+   ```bash
+   git clone https://github.com/mariuz/firebirdwebadmin.git
+   ```
+2. **Web Server Setup:** Place the directory in your web server's document root (e.g., `/var/www/html/`).
+3. **Configuration:**
+   * Open `inc/configuration.inc.php`.
+   * Configure the `BINPATH` to point to your Firebird binaries (e.g., `/usr/bin/`).
+   * Set `TMPPATH` to a directory writable by the web server.
+   * Adjust default connection settings if necessary.
+4. **Access:** Navigate to the directory in your browser (e.g., `http://localhost/firebirdwebadmin/`).
 
-Firebird 2.x.x for Linux,
-Apache 2.x or any server with php support
+---
 
-## ChangeLog
+## 📖 Documentation
 
-### Version 3.4.1 (27.02.2020)
+While there is no exhaustive manual, users familiar with Firebird will find the interface intuitive.
 
-* [enhancement:] Adjust "Accessories" page UI.
-* [enhancement:] Remove Crowdin badge from footer.
-* [enhancement:] Update debug_funcs.inc.php
-* [bugfix:] Don't warn if "isql" is "isql-fb" on Linux
-* [typo:] Correct typo: firebirid -> firebird
-* [bugfix] fix sql create database
-* [enhancement:] Add Character Sets
-* [enhancement:] Quiet PHP7.2 deprecation warning …
-* [enhancement:] Further create_function refactor
-* [enhancement:] Remove unused/outdated markableFbwaTable.
-* [enhancement:] cosmetics
+* **Configuration:** Check `inc/configuration.inc.php` for advanced settings.
+* **Ubuntu Guide:** [How to install Firebird on Ubuntu](https://help.ubuntu.com/community/Firebird3.0)
+* **Firebird Official Docs:** [Firebird Documentation](https://www.firebirdsql.org/en/documentation/)
 
-#### Further informations
+## 🧪 Testing
 
-* See [CHANGELOG.md][changelog] to get the full changelog.
+### Unit Tests (PHPUnit)
+The project uses PHPUnit for unit testing core functions.
+1. Install dependencies: `composer install`
+2. Run tests: `./vendor/bin/phpunit`
 
-## Contributing
+### End-to-End Tests (Playwright)
+The project uses Playwright for E2E testing.
+1. Install dependencies: `npm install`
+2. Run tests: `npx playwright test`
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+---
 
-## Copyright notice
+## 📄 ChangeLog
 
- (C) 2000,2001,2002,2003,2004 Lutz Brueckner <irie@gmx.de>
-                              Kapellenstr. 1A
-                              22117 Hamburg, Germany
+See [CHANGELOG.md](CHANGELOG.md) for the full history of changes.
 
-FirebirdWebAdmin is published under the terms of the [GNU GPL v.2][gnu_gpl_v2_license], please read the file LICENCE for details.
+---
 
-This software is provided 'as-is', without any expressed or implied warranty.  In no event will the author be held liable for any damages arising from the use of this software.
+## 🤝 Contributing
 
-[gnu_gpl_v2_license]: https://opensource.org/licenses/GPL-2.0
-[changelog]: CHANGELOG.md
+We welcome contributions! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/amazing-feature`).
+3. Commit your changes (`git commit -m 'Add amazing feature'`).
+4. Push to the branch (`git push origin feature/amazing-feature`).
+5. Open a Pull Request.
+
+---
+
+## ⚖️ License
+
+**FirebirdWebAdmin** is published under the terms of the [GNU GPL v.2](https://opensource.org/licenses/GPL-2.0).
+See the `LICENSE` file for details.
+
+© 2000-2026 Lutz Brueckner and contributors.

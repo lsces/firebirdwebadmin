@@ -7,7 +7,9 @@
 
 require './inc/configuration.inc.php';
 
-if (DEBUG) {
+ini_set('log_errors', 'On');
+if (defined('DEBUG') && DEBUG) {
+    ini_set('display_errors', 'On');
     $start_time = @microtime();
 }
 
@@ -26,7 +28,7 @@ if (DEBUG || DEBUG_HTML) {
     include './inc/debug_funcs.inc.php';
 }
 
-if (!extension_loaded('interbase')) {
+if (!extension_loaded('interbase') && !extension_loaded('firebird')) {
     die($ERRORS['NO_IBASE_MODULE']);
 }
 

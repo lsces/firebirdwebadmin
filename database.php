@@ -282,14 +282,14 @@ if (have_panel_permissions($s_login['user'], 'db_systable', true)) {
 // determine the accessible databases for the login panel
 //
 $dbfiles = array();
-if (isset($ALLOWED_FILES)  && count($ALLOWED_FILES) > 0) {
+if (isset($ALLOWED_FILES) && is_array($ALLOWED_FILES) && count($ALLOWED_FILES) > 0) {
     foreach ($ALLOWED_FILES as $file) {
         if ((strpos($file, '/') === false  &&  strpos($file, '\\') === false)  ||
             is_file($file)) {
             $dbfiles[] = $file;
         }
     }
-} elseif (isset($ALLOWED_DIRS)  &&  count($ALLOWED_DIRS) > 0) {
+} elseif (isset($ALLOWED_DIRS) && is_array($ALLOWED_DIRS) &&  count($ALLOWED_DIRS) > 0) {
     foreach ($ALLOWED_DIRS as $dir) {
         if (!@is_readable($dir)) {
             $warning .= sprintf($WARNINGS['CAN_NOT_ACCESS_DIR'], $dir);
